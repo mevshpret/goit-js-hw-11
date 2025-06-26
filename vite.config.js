@@ -6,10 +6,6 @@ import SortCss from 'postcss-sort-media-queries';
 
 export default defineConfig(({ command }) => {
   return {
-    optimizeDeps: {
-      include: ['axios', 'izitoast'],
-    },
-
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
     },
