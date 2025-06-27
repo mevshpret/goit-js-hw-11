@@ -1,40 +1,47 @@
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
+export {createGallery, clearGallery, showLoader, hideLoader };
 
-const gallery = document.querySelector('.gallery');
-let lightbox = new SimpleLightbox('.gallery a');
-const loader = document.querySelector('.loader');
+const gallery = document.querySelector(".gallery");
+const loader = document.querySelector(".loader");
+const lightbox = new SimpleLightbox('.gallery a', {
+            captionsData: 'alt',
+            captionDelay: 250,
+        });
 
-export function createGallery(images) {
-  const markup = images
-    .map(
-      image => `
-    <li class="gallery-item">
-      <a href="${image.largeImageURL}">
-        <img src="${image.webformatURL}" alt="${image.tags}"/>
-      </a>
-      <div>
-        <p>Likes: ${image.likes}</p>
-        <p>Views: ${image.views}</p>
-        <p>Comments: ${image.comments}</p>
-        <p>Downloads: ${image.downloads}</p>
-      </div>
-    </li>`
-    )
-    .join('');
-
-  gallery.insertAdjacentHTML('afterbegin', markup);
-  lightbox.refresh();
+function createGallery(images) {
+    gallery.innerHTML = images.map(elem => `
+        <li class="gallery-item">
+            <a class="gallery-link" href=${elem.largeImageURL}>
+                <img
+                    class="gallery-image"
+                    src="${elem.webformatURL}"
+                    alt="${elem.tags}"
+                />
+                <ul class="card-info">
+                    <li>likes:${elem.likes}</li>
+                    <li>views:${elem.views}</li>
+                    <li>comments:${elem.comments}</li>
+                    <li>downloads:${elem.downloads}</li>
+                </ul>
+            </a>
+        </li>
+    `).join("");
+    lightbox.refresh();
+}
+    
+function clearGallery() {
+    gallery.innerHTML = '';
+    lightbox.refresh();
 }
 
-export function clearGallery() {
-  gallery.innerHTML = '';
+function showLoader() {
+    loader.classList.remove("hidden");
 }
 
-export function showLoader() {
-  loader.classList.remove('hidden');
+function hideLoader() {
+    loader.classList.add("hidden");
 }
 
-export function hideLoader() {
-  loader.classList.add('hidden');
-}
+
+    

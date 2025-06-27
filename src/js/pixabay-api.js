@@ -1,17 +1,34 @@
 import axios from 'axios';
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
+export {getImagesByQuery};
 
-const baseUrl = 'https://pixabay.com/api/';
-const myApiKey = import.meta.env.VITE_PIXABAY_API_KEY;
+function getImagesByQuery(query) {
+    const searchParams = new URLSearchParams({
+        key: '50857133-3b0b39e0288c55ff632440828',
+        q: query,
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: 'true'
+    });
 
-export function getImagesByQuery(query) {
-  const params = {
-    key: myApiKey,
-    q: query,
-    image_type: 'photo',
-    orientation: 'horizontal',
-    safesearch: true,
-    per_page: 18,
-  };
-
-  return axios.get(baseUrl, { params }).then(responce => responce.data);
+    return axios.get(`https://pixabay.com/api/?${searchParams}`)
+    	.then(response => {
+		    if(response.data.hits.length === 0) {
+                iziToast.error({
+                    title: 'error',
+                    message: 'Sorry, there are no images matching your search query. Please try again!',
+                });
+                return null;
+            } else {
+                return response.data.hits;
+            }
+  	    })
+  	    .catch(error => {
+            iziToast.error({
+                title: 'Error',
+                message: `message: ${error.message}`,
+            });
+            return null;
+  	    })
 }
